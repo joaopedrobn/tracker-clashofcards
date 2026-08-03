@@ -1,4 +1,4 @@
-import { BookOpen, Database, Download, LogIn, LogOut, Menu, Shield, UserRound, Users } from "lucide-react";
+import { BookOpen, Database, Download, Github, LogIn, LogOut, Menu, Shield, UserRound, Users } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
@@ -8,6 +8,8 @@ import { ProfileAvatar } from "../profile/ProfileAvatar";
 import { SyncIndicator } from "../sync/SyncIndicator";
 import { Button } from "../ui/Button";
 import { LanguageSelector } from "./LanguageSelector";
+
+const CREATOR_URL = "https://github.com/joaopedrobn";
 
 interface HeaderProps {
   collected: number;
@@ -78,11 +80,15 @@ export function Header(props: HeaderProps) {
             <Download size={18} />
           </button>
 
-          <div className="relative md:hidden">
+          <div className="relative min-[1400px]:hidden">
             <button className="icon-button" onClick={() => setToolsOpen((open) => !open)} aria-label={t("header.tools")} aria-expanded={toolsOpen} aria-haspopup="menu"><Menu size={18} /></button>
             {toolsOpen && (
-              <div className="panel-metal absolute right-0 top-12 z-50 w-[min(15rem,calc(100vw-1.5rem))] rounded-2xl p-2 shadow-2xl" role="menu">
-                <button role="menuitem" className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm text-stone-200 hover:bg-white/8" onClick={() => { setToolsOpen(false); props.onOpenTransfer(); }}><Download size={16} /> {t("header.transfer")}</button>
+              <div className="panel-metal absolute -right-[50px] top-12 z-50 w-[min(19rem,calc(100vw-1.5rem))] rounded-2xl p-2 shadow-2xl" role="menu">
+                <button role="menuitem" className="flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-sm text-stone-200 hover:bg-white/8 md:hidden" onClick={() => { setToolsOpen(false); props.onOpenTransfer(); }}><Download size={16} /> {t("header.transfer")}</button>
+                <a role="menuitem" href={CREATOR_URL} target="_blank" rel="noopener noreferrer" className="flex w-full min-w-0 items-start gap-2 rounded-xl px-3 py-2.5 text-left text-xs text-stone-400 transition hover:bg-white/8 hover:text-amber-300">
+                  <Github size={16} className="mt-0.5 shrink-0" aria-hidden="true" />
+                  <span className="min-w-0 leading-relaxed"><span>{t("creator.label")}</span>{" "}<span className="break-all">{CREATOR_URL}</span></span>
+                </a>
               </div>
             )}
           </div>
@@ -109,6 +115,12 @@ export function Header(props: HeaderProps) {
                 </div>
               </div>
             )}
+          </div>
+
+          <div className="hidden min-w-0 items-center gap-1.5 whitespace-nowrap text-[10px] text-stone-500 min-[1400px]:flex">
+            <Github size={14} className="shrink-0" aria-hidden="true" />
+            <span>{t("creator.label")}</span>
+            <a href={CREATOR_URL} target="_blank" rel="noopener noreferrer" className="text-stone-400 transition hover:text-amber-300">{CREATOR_URL}</a>
           </div>
         </div>
       </div>
