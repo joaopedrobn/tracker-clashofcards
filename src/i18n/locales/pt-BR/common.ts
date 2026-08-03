@@ -38,6 +38,9 @@ export default {
     portuguese: "Português do Brasil",
     english: "English",
   },
+  creator: {
+    label: "Criado por:",
+  },
   guest: {
     title: "Você está usando o modo sem conta.",
     body: "Sua coleção está salva somente neste navegador e dispositivo. Ela não será sincronizada e seu perfil não aparecerá na comunidade.",

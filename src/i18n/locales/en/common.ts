@@ -38,6 +38,9 @@ export default {
     portuguese: "Português do Brasil",
     english: "English",
   },
+  creator: {
+    label: "Created by:",
+  },
   guest: {
     title: "You are using guest mode.",
     body: "Your collection is saved only in this browser and device. It will not be synced and your profile will not appear in the community.",
