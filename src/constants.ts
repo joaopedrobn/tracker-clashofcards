@@ -1,1 +1,1 @@
-export const APP_NAME = "Clash Card Tracker";
+export const APP_NAME = "Clash of Card Tracker";

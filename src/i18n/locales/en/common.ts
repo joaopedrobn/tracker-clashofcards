@@ -1,7 +1,7 @@
 export default {
   brand: {
     subtitle: "EVENT ALBUM · CLASH CARTEADOR",
-    logoAlt: "Clash Card Tracker logo",
+    logoAlt: "Clash of Card Tracker logo",
   },
   nav: {
     collection: "Collection",

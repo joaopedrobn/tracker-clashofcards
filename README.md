@@ -1,4 +1,4 @@
-# Clash Card Tracker
+# Clash of Card Tracker
 
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
@@ -103,17 +103,17 @@ Sem as variáveis do Supabase, o modo local continua funcionando e os recursos d
 
 ## Scripts disponíveis
 
-| Comando | Finalidade |
-| --- | --- |
-| `npm run dev` | Inicia o servidor de desenvolvimento. |
-| `npm run lint` | Executa o ESLint. |
-| `npm run validate:cards` | Valida catálogo, IDs e as 60 imagens das cartas. |
-| `npm run validate:sync` | Valida migração, mesclagem, perfil e regras de sincronização. |
-| `npm run validate:i18n` | Confere a paridade das traduções PT-BR e EN. |
-| `npm run validate:avatars` | Valida arquivos, catálogo e segurança dos avatares. |
-| `npm run build` | Executa o TypeScript e gera o build otimizado. |
-| `npm run preview` | Serve localmente o build de produção. |
-| `npm run test:smoke` | Executa o smoke test em Chrome contra um preview local. |
+| Comando                    | Finalidade                                                    |
+| -------------------------- | ------------------------------------------------------------- |
+| `npm run dev`              | Inicia o servidor de desenvolvimento.                         |
+| `npm run lint`             | Executa o ESLint.                                             |
+| `npm run validate:cards`   | Valida catálogo, IDs e as 60 imagens das cartas.              |
+| `npm run validate:sync`    | Valida migração, mesclagem, perfil e regras de sincronização. |
+| `npm run validate:i18n`    | Confere a paridade das traduções PT-BR e EN.                  |
+| `npm run validate:avatars` | Valida arquivos, catálogo e segurança dos avatares.           |
+| `npm run build`            | Executa o TypeScript e gera o build otimizado.                |
+| `npm run preview`          | Serve localmente o build de produção.                         |
+| `npm run test:smoke`       | Executa o smoke test em Chrome contra um preview local.       |
 
 ## Banco de dados e segurança
 
