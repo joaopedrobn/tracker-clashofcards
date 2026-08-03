@@ -1,0 +1,51 @@
+# Dependencies and build output
+node_modules/
+dist/
+.vite/
+coverage/
+playwright-report/
+test-results/
+artifacts/
+*.tsbuildinfo
+
+# Environment files and local credentials
+.env
+.env.local
+.env.*.local
+!.env.example
+.dev.vars
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Cloudflare local tooling
+.cloudflare/
+.wrangler/
+cloudflared.exe
+
+# Archives
+*.zip
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors and IDEs
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.example.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Local assistant metadata
+.agents/
+.codex/

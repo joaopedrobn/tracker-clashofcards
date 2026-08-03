@@ -1,0 +1,19 @@
+{
+  "name": "Clash Card Tracker",
+  "short_name": "Clash Cards",
+  "description": "Controle seu álbum, encontre cartas faltantes e descubra oportunidades de troca.",
+  "lang": "pt-BR",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#101116",
+  "theme_color": "#11131a",
+  "icons": [
+    {
+      "src": "/logo/icon-clash.webp",
+      "sizes": "128x128",
+      "type": "image/webp",
+      "purpose": "any"
+    }
+  ]
+}

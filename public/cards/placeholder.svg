@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 500" role="img" aria-label="Imagem de carta indisponível">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#343640"/><stop offset="1" stop-color="#17181e"/></linearGradient></defs>
+  <rect width="600" height="500" fill="url(#bg)"/>
+  <path d="M300 92l112 42v86c0 83-45 145-112 181-67-36-112-98-112-181v-86l112-42z" fill="#454750" stroke="#777985" stroke-width="12"/>
+  <path d="M300 150v146M250 218h100" stroke="#24252b" stroke-width="25" stroke-linecap="round"/>
+  <text x="300" y="456" text-anchor="middle" fill="#92949d" font-family="Arial,sans-serif" font-size="26" font-weight="700">IMAGEM EM BREVE</text>
+</svg>
