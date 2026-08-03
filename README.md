@@ -1,4 +1,4 @@
-# Clash of Card Tracker
+# Clash of Cards Tracker
 
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)

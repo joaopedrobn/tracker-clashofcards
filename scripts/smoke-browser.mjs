@@ -233,7 +233,7 @@ try {
   );
   assert.equal(
     await evaluate(
-      "fetch('/site.webmanifest').then((response) => response.json()).then((manifest) => manifest.name === 'Clash of Card Tracker' && manifest.icons[0].src === '/logo/icon-clash.webp')",
+      "fetch('/site.webmanifest').then((response) => response.json()).then((manifest) => manifest.name === 'Clash of Cards Tracker' && manifest.icons[0].src === '/logo/icon-clash.webp')",
     ),
     true,
   );

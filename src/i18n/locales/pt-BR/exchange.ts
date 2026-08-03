@@ -24,7 +24,7 @@ export default {
   },
   proposal: {
     greeting: "Olá, {{name}}!",
-    found: "Encontrei seu perfil no Clash of Card Tracker.",
+    found: "Encontrei seu perfil no Clash of Cards Tracker.",
     theirs: "Você tem para mim:",
     mine: "Eu tenho para você:",
     myTag: "Minha tag: {{tag}}",
