@@ -1,4 +1,5 @@
 import type { Card } from "./card";
+import type { AccountTradeOpportunity } from "./clashAccount";
 
 export interface TradeComparisonResult {
   theirsForMe: Card[];
@@ -10,6 +11,16 @@ export interface TradeComparisonResult {
 }
 
 export interface TradeOpportunitySummary {
+  theyCanOfferCount: number;
+  iCanOfferCount: number;
+}
+
+export interface MultiAccountTradeComparison {
+  theirsForMe: AccountTradeOpportunity[];
+  mineForThem: AccountTradeOpportunity[];
+}
+
+export interface AccountTradeSummary {
   theyCanOfferCount: number;
   iCanOfferCount: number;
 }

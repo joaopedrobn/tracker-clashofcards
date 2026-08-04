@@ -11,6 +11,7 @@
     "validate:i18n": "tsx scripts/validate-i18n.ts",
     "validate:avatars": "tsx scripts/validate-avatars.ts",
     "validate:sync": "tsx scripts/validate-sync.ts",
+    "validate:accounts": "tsx scripts/validate-accounts.ts",
     "test:smoke": "node scripts/smoke-browser.mjs",
     "preview": "vite preview"
   },

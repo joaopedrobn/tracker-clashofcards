@@ -12,6 +12,7 @@ export default {
     signIn: "Entrar",
     myAccount: "Minha conta",
     editProfile: "Editar perfil",
+    clashAccounts: "Minhas contas do Clash",
     collectionData: "Dados da coleção",
     signOut: "Sair",
     openMenu: "Abrir menu da conta",

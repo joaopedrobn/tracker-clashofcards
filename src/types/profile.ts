@@ -1,12 +1,9 @@
 import type { CollectionData, CollectionSummaryData } from "./collection";
+import type { ClashAccount } from "./clashAccount";
 
 export interface PublicProfile {
   id: string;
   displayName: string;
-  clashNickname: string;
-  clashPlayerTag: string;
-  clanName: string | null;
-  clanTag: string | null;
   bio: string | null;
   avatarUrl: string | null;
   isPublic: boolean;
@@ -17,29 +14,20 @@ export interface PublicProfile {
 
 export interface ProfileInput {
   displayName: string;
-  clashNickname: string;
-  clashPlayerTag: string;
-  clanName: string;
-  clanTag: string;
   bio: string;
   avatarUrl: string | null;
   isPublic: boolean;
 }
 
-export interface RemoteUserCard {
-  userId: string;
-  cardId: string;
-  owned: boolean;
-  duplicates: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export type CommunitySort = "recent" | "progress" | "duplicates" | "same-clan";
 
 export interface PublicPlayer extends PublicProfile {
+  accounts: ClashAccount[];
+  primaryAccount: ClashAccount | null;
+  accountCount: number;
   summary: CollectionSummaryData;
   collection: CollectionData;
+  collections: Record<string, CollectionData>;
 }
 
 export interface CommunityResult {

@@ -1,4 +1,4 @@
-import { BookOpen, Database, Download, Github, LogIn, LogOut, Menu, Shield, UserRound, Users } from "lucide-react";
+import { BookOpen, Database, Download, Github, Layers3, LogIn, LogOut, Menu, Shield, UserRound, Users } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
@@ -24,6 +24,7 @@ interface HeaderProps {
   onRetrySync: () => void;
   onOpenAuth: () => void;
   onOpenProfile: () => void;
+  onOpenAccounts: () => void;
   onSignOut: () => void;
   onOpenTransfer: () => void;
 }
@@ -55,9 +56,9 @@ export function Header(props: HeaderProps) {
           <h1 className="truncate font-display text-sm text-white min-[380px]:text-base sm:text-lg lg:text-xl">{APP_NAME}</h1>
         </div>
 
-        <nav className="col-span-3 row-start-2 grid w-full grid-cols-2 gap-1 rounded-2xl border border-white/6 bg-black/15 p-1 lg:order-none lg:flex lg:w-auto lg:shrink-0 lg:border-0 lg:bg-transparent lg:p-0" aria-label={t("nav.main")}>
+        <nav className={`col-span-3 row-start-2 grid w-full ${props.userEmail ? "grid-cols-2" : "grid-cols-1"} gap-1 rounded-2xl border border-white/6 bg-black/15 p-1 lg:order-none lg:flex lg:w-auto lg:shrink-0 lg:border-0 lg:bg-transparent lg:p-0`} aria-label={t("nav.main")}>
           <NavLink to="/" end className={navClass}><BookOpen size={16} aria-hidden="true" /><span>{t("nav.collection")}</span></NavLink>
-          <NavLink to="/comunidade" className={navClass}><Users size={16} aria-hidden="true" /><span>{t("nav.community")}</span></NavLink>
+          {props.userEmail && <NavLink to="/comunidade" className={navClass}><Users size={16} aria-hidden="true" /><span>{t("nav.community")}</span></NavLink>}
         </nav>
 
         {props.userEmail && (
@@ -110,6 +111,7 @@ export function Header(props: HeaderProps) {
                 </div>
                 <div className="pt-2">
                   <button role="menuitem" className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm text-stone-300 hover:bg-white/6" onClick={() => { setAccountOpen(false); props.onOpenProfile(); }}><UserRound size={16} /> {t("account.editProfile")}</button>
+                  <button role="menuitem" className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm text-stone-300 hover:bg-white/6" onClick={() => { setAccountOpen(false); props.onOpenAccounts(); }}><Layers3 size={16} /> {t("account.clashAccounts")}</button>
                   <button role="menuitem" className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm text-stone-300 hover:bg-white/6" onClick={() => { setAccountOpen(false); props.onOpenTransfer(); }}><Database size={16} /> {t("account.collectionData")}</button>
                   <button role="menuitem" className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-sm text-red-200 hover:bg-red-400/8" onClick={() => { setAccountOpen(false); props.onSignOut(); }}><LogOut size={16} /> {t("account.signOut")}</button>
                 </div>

@@ -11,9 +11,9 @@ export const EMPTY_COLLECTION: CollectionData = {
   preferences: { category: "all", filter: "all" },
 };
 
-export function loadCollection(): CollectionData {
+export function loadCollectionFromKey(key: string): CollectionData {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(key);
     if (!raw) return EMPTY_COLLECTION;
     return migrateCollectionData(JSON.parse(raw));
   } catch {
@@ -21,9 +21,12 @@ export function loadCollection(): CollectionData {
   }
 }
 
-export function saveCollection(collection: CollectionData): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(collection));
+export function saveCollectionToKey(key: string, collection: CollectionData): void {
+  localStorage.setItem(key, JSON.stringify(collection));
 }
+
+export function loadCollection(): CollectionData { return loadCollectionFromKey(STORAGE_KEY); }
+export function saveCollection(collection: CollectionData): void { saveCollectionToKey(STORAGE_KEY, collection); }
 
 export function clearStoredCollection(): void {
   localStorage.removeItem(STORAGE_KEY);

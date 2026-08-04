@@ -1,16 +1,20 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState, type SetStateAction } from "react";
 import type { CardFilter, CategoryFilter, CollectionData } from "../types/collection";
-import { EMPTY_COLLECTION, loadCollection, saveCollection } from "../services/collectionStorage";
+import { EMPTY_COLLECTION, loadCollectionFromKey, saveCollectionToKey, STORAGE_KEY } from "../services/collectionStorage";
 import { summarizeCollection } from "../services/collectionSummary";
-import { useLocalStorage } from "./useLocalStorage";
 import { clearCollectionCards } from "../services/collectionClear";
 
-export function useCollection() {
-  const [collection, setCollection] = useLocalStorage<CollectionData>(
-    EMPTY_COLLECTION,
-    loadCollection,
-    saveCollection,
-  );
+export function useCollection(storageKey = STORAGE_KEY) {
+  const [stored, setStored] = useState(() => ({ key: storageKey, value: typeof window === "undefined" ? EMPTY_COLLECTION : loadCollectionFromKey(storageKey) }));
+  const collection = stored.key === storageKey ? stored.value : loadCollectionFromKey(storageKey);
+  useEffect(() => { setStored((current) => current.key === storageKey ? current : { key: storageKey, value: loadCollectionFromKey(storageKey) }); }, [storageKey]);
+  useEffect(() => { if (stored.key === storageKey) saveCollectionToKey(storageKey, stored.value); }, [storageKey, stored]);
+  const setCollection = useCallback((action: SetStateAction<CollectionData>) => {
+    setStored((current) => {
+      const value = current.key === storageKey ? current.value : loadCollectionFromKey(storageKey);
+      return { key: storageKey, value: typeof action === "function" ? action(value) : action };
+    });
+  }, [storageKey]);
 
   const toggleOwned = useCallback((cardId: string) => {
     setCollection((current) => {
