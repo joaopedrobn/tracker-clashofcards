@@ -7,10 +7,6 @@ import { isAllowedAvatarUrl, PROFILE_AVATARS } from "../data/avatars";
 export interface ProfileRow {
   id: string;
   display_name: string;
-  clash_nickname: string;
-  clash_player_tag: string;
-  clan_name: string | null;
-  clan_tag: string | null;
   bio: string | null;
   avatar_url: string | null;
   is_public: boolean;
@@ -19,16 +15,12 @@ export interface ProfileRow {
   last_collection_update: string | null;
 }
 
-const PROFILE_COLUMNS = "id,display_name,clash_nickname,clash_player_tag,clan_name,clan_tag,bio,avatar_url,is_public,created_at,updated_at,last_collection_update";
+const PROFILE_COLUMNS = "id,display_name,bio,avatar_url,is_public,created_at,updated_at,last_collection_update";
 
 export function mapProfile(row: ProfileRow): PublicProfile {
   return {
     id: row.id,
     displayName: row.display_name,
-    clashNickname: row.clash_nickname,
-    clashPlayerTag: row.clash_player_tag,
-    clanName: row.clan_name,
-    clanTag: row.clan_tag,
     bio: row.bio,
     avatarUrl: row.avatar_url,
     isPublic: row.is_public,
@@ -62,10 +54,6 @@ export async function saveOwnProfile(input: ProfileInput): Promise<PublicProfile
   const payload = {
     id: userId,
     display_name: input.displayName.trim(),
-    clash_nickname: input.clashNickname.trim(),
-    clash_player_tag: input.clashPlayerTag,
-    clan_name: input.clanName.trim() || null,
-    clan_tag: input.clanTag || null,
     bio: input.bio.trim() || null,
     avatar_url: isAllowedAvatarUrl(input.avatarUrl) ? input.avatarUrl : null,
     is_public: input.isPublic,

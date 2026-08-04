@@ -9,10 +9,6 @@ import { Modal } from "../ui/Modal";
 
 const createEmptyProfile = (): ProfileInput => ({
   displayName: "",
-  clashNickname: "",
-  clashPlayerTag: "",
-  clanName: "",
-  clanTag: "",
   bio: "",
   avatarUrl: getDefaultAvatar()?.image ?? null,
   isPublic: true,
@@ -30,10 +26,6 @@ export function ProfileFormModal({ open, profile, required = false, onClose, onS
     setError("");
     setForm(profile ? {
       displayName: profile.displayName,
-      clashNickname: profile.clashNickname,
-      clashPlayerTag: profile.clashPlayerTag,
-      clanName: profile.clanName ?? "",
-      clanTag: profile.clanTag ?? "",
       bio: profile.bio ?? "",
       avatarUrl: getAvatarByUrl(profile.avatarUrl)?.image ?? null,
       isPublic: profile.isPublic,
@@ -63,10 +55,6 @@ export function ProfileFormModal({ open, profile, required = false, onClose, onS
         </div> : <div className="mt-3 flex items-center gap-3 rounded-2xl border border-white/8 bg-black/20 p-3"><ProfileAvatar displayName={form.displayName} /><p className="text-sm text-stone-400">{t("profile:noAvatars")}</p></div>}
       </fieldset>
       <Field label={t("profile:displayName")} value={form.displayName} maxLength={40} onChange={(value) => update("displayName", value)} />
-      <Field label={t("profile:nickname")} value={form.clashNickname} maxLength={40} onChange={(value) => update("clashNickname", value)} />
-      <Field label={t("profile:playerTag")} value={form.clashPlayerTag} placeholder="#2P0LYQ" uppercase onChange={(value) => update("clashPlayerTag", value)} />
-      <Field label={t("profile:clanName")} value={form.clanName} maxLength={50} onChange={(value) => update("clanName", value)} />
-      <Field label={t("profile:clanTag")} value={form.clanTag} placeholder="#CLAN" uppercase onChange={(value) => update("clanTag", value)} />
       <label className="flex items-center gap-3 rounded-2xl border border-white/8 bg-black/20 px-4"><input type="checkbox" checked={form.isPublic} onChange={(event) => update("isPublic", event.target.checked)} /><span className="text-sm font-bold text-stone-200">{t("profile:public")}</span></label>
       <label className="sm:col-span-2"><span className="mb-2 block text-xs font-black uppercase text-stone-400">{t("profile:bio")}</span><textarea className="field min-h-24 w-full resize-y" maxLength={240} value={form.bio} onChange={(event) => update("bio", event.target.value)} /><small className="mt-1 block text-right text-stone-500">{form.bio.length}/240</small></label>
       {form.isPublic && <p className="rounded-xl border border-sky-300/15 bg-sky-300/7 p-3 text-xs leading-relaxed text-sky-100 sm:col-span-2">{t("profile:publicNotice")}</p>}
@@ -76,6 +64,6 @@ export function ProfileFormModal({ open, profile, required = false, onClose, onS
   </Modal>;
 }
 
-function Field({ label, value, onChange, maxLength, placeholder, uppercase }: { label: string; value: string; onChange: (value: string) => void; maxLength?: number; placeholder?: string; uppercase?: boolean }) {
-  return <label><span className="mb-2 block text-xs font-black uppercase text-stone-400">{label}</span><input className={`field h-12 w-full ${uppercase ? "uppercase" : ""}`} maxLength={maxLength} placeholder={placeholder} value={value} onChange={(event) => onChange(event.target.value)} /></label>;
+function Field({ label, value, onChange, maxLength }: { label: string; value: string; onChange: (value: string) => void; maxLength?: number }) {
+  return <label><span className="mb-2 block text-xs font-black uppercase text-stone-400">{label}</span><input className="field h-12 w-full" maxLength={maxLength} value={value} onChange={(event) => onChange(event.target.value)} /></label>;
 }

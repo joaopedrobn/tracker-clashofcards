@@ -15,6 +15,7 @@ export default {
   text: {
     title: "🃏 MINHA COLEÇÃO{{owner}} — CLASH CARTEADOR",
     owner: " DE {{name}}",
+    account: "Conta: {{name}} · {{tag}}",
     missing: "📌 FALTANTES",
     duplicates: "🔁 REPETIDAS PARA TROCA",
     complete: "Álbum completo! Nenhuma repetida cadastrada.",

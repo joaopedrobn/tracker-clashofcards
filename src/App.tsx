@@ -12,9 +12,11 @@ import { PageContainer } from "./components/layout/PageContainer";
 import { Button } from "./components/ui/Button";
 import { Modal } from "./components/ui/Modal";
 import { Toast } from "./components/ui/Toast";
+import { ActiveAccountSelector } from "./components/profile/ActiveAccountSelector";
 import { cards } from "./data/cards";
 import { categories } from "./data/categories";
 import type { SyncedCollection } from "./hooks/useSyncedCollection";
+import type { ClashAccountsState } from "./hooks/useClashAccounts";
 import { generateExchangeText } from "./services/exchangeTextGenerator";
 import type { CardCategory } from "./types/card";
 import type { CardFilter } from "./types/collection";
@@ -25,9 +27,10 @@ interface CollectionPageProps {
   tracker: SyncedCollection;
   transferOpen: boolean;
   setTransferOpen: (open: boolean) => void;
+  accountsState: ClashAccountsState;
 }
 
-export default function App({ tracker, transferOpen, setTransferOpen }: CollectionPageProps) {
+export default function App({ tracker, transferOpen, setTransferOpen, accountsState }: CollectionPageProps) {
   const { t, i18n } = useTranslation(["collection", "exchange", "common"]);
   const {
     collection,
@@ -84,7 +87,8 @@ export default function App({ tracker, transferOpen, setTransferOpen }: Collecti
       return categoryDifference || a.order - b.order;
     }), [collection.cards, collection.preferences, search]);
 
-  const exchangeText = useMemo(() => generateExchangeText(cards, collection, i18n.language), [collection, i18n.language]);
+  const exchangeText = useMemo(() => generateExchangeText(cards, collection, i18n.language, accountsState.activeAccount), [accountsState.activeAccount, collection, i18n.language]);
+  const transferableCollection = useMemo(() => accountsState.activeAccount ? { ...collection, playerName: `${accountsState.activeAccount.accountLabel} · ${accountsState.activeAccount.clashNickname} · ${accountsState.activeAccount.clashPlayerTag}` } : collection, [accountsState.activeAccount, collection]);
   const notify = (message: string) => setToast(message);
   const handleToggle = (cardId: string) => {
     const state = collection.cards[cardId];
@@ -99,6 +103,7 @@ export default function App({ tracker, transferOpen, setTransferOpen }: Collecti
     <div className="min-h-screen">
       <PageContainer>
         <div className="space-y-5 pt-5 sm:space-y-7 sm:pt-7">
+          <ActiveAccountSelector state={accountsState} />
           <CollectionSummary summary={summary} progress={progress} />
 
           <section aria-labelledby="cards-title">
@@ -130,7 +135,7 @@ export default function App({ tracker, transferOpen, setTransferOpen }: Collecti
       </PageContainer>
 
       <Modal open={transferOpen} onClose={() => setTransferOpen(false)} title={t("exchange:transfer.title")} description={t("exchange:transfer.description")}>
-        <CollectionImportExport collection={collection} onImport={(next) => { replaceCollection(next); setTransferOpen(false); }} onNotify={notify} onRequestClear={() => setClearOpen(true)} />
+        <CollectionImportExport collection={transferableCollection} onImport={(next) => { replaceCollection(accountsState.activeAccount ? { ...next, playerName: accountsState.activeAccount.clashNickname } : next); setTransferOpen(false); }} onNotify={notify} onRequestClear={() => setClearOpen(true)} />
       </Modal>
 
       <Modal open={clearOpen} onClose={() => setClearOpen(false)} title={t("collection:clear.title")} description={t("collection:clear.description")}>

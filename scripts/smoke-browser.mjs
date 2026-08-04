@@ -88,7 +88,8 @@ try {
       }
       await delay(100);
     }
-    throw new Error(`State not found: ${expression}`);
+    const pageText = await evaluate("document.body?.innerText.slice(0, 1200)").catch(() => "");
+    throw new Error(`State not found: ${expression}\nPage: ${pageText}`);
   };
   const screenshot = async (name) => {
     const result = await send("Page.captureScreenshot", {
@@ -158,10 +159,6 @@ try {
       profile: {
         id: userId,
         display_name: "Responsive Smoke",
-        clash_nickname: "Smoke",
-        clash_player_tag: "#TEST123",
-        clan_name: null,
-        clan_tag: null,
         bio: null,
         avatar_url: "/avatars/avatar-1.webp",
         is_public: true,
@@ -169,6 +166,33 @@ try {
         updated_at: new Date().toISOString(),
         last_collection_update: null,
       },
+      accounts: [{
+        id: "00000000-0000-4000-8000-000000000043",
+        owner_id: userId,
+        account_label: "Conta principal com nome extenso",
+        clash_nickname: "Smoke Jogador Principal",
+        clash_player_tag: "#TEST123",
+        clan_name: null,
+        clan_tag: null,
+        avatar_url: "/avatars/avatar-2.webp",
+        is_primary: true,
+        display_order: 0,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      }, {
+        id: "00000000-0000-4000-8000-000000000044",
+        owner_id: userId,
+        account_label: "Snd Ichigo com rótulo muito longo",
+        clash_nickname: "jr fn15 secundário",
+        clash_player_tag: "#LONGTAG98765",
+        clan_name: "Clã responsivo",
+        clan_tag: "#CLAN123",
+        avatar_url: "/avatars/avatar-3.webp",
+        is_primary: false,
+        display_order: 1,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      }],
     };
   };
   const setInput = (selector, value) =>
@@ -221,7 +245,7 @@ try {
   );
   assert.equal(
     await evaluate(
-      "document.querySelector('meta[property=\"og:title\"]')?.content.length > 0 && document.querySelector('meta[property=\"og:description\"]')?.content.length > 0 && document.querySelector('meta[property=\"og:image\"]')?.content.endsWith('/logo/icon-guia.webp')",
+      "document.querySelector('meta[property=\"og:title\"]')?.content.length > 0 && document.querySelector('meta[property=\"og:description\"]')?.content.length > 0 && document.querySelector('meta[property=\"og:image\"]')?.content.endsWith('/logo/evento-clashofcards.webp')",
     ),
     true,
   );
@@ -251,7 +275,7 @@ try {
   );
   assert.equal(
     await evaluate(
-      "document.querySelector('nav a[href=\"/\"]')?.innerText.includes('Coleção') && document.querySelector('nav a[href=\"/comunidade\"]')?.innerText.includes('Comunidade')",
+      "document.querySelector('nav a[href=\"/\"]')?.innerText.includes('Coleção') && !document.querySelector('nav a[href=\"/comunidade\"]')",
     ),
     true,
   );
@@ -401,67 +425,8 @@ try {
   await screenshot("smoke-en-auth-desktop.png");
   assert.equal(await clickButton("Close"), true);
 
-  await evaluate(
-    "document.querySelector('a[href=\"/comunidade\"]')?.click(); true",
-  );
-  await waitFor(
-    "location.pathname === '/comunidade' && document.body.innerText.includes('Community')",
-  );
-  assert.equal(
-    await evaluate(
-      "Boolean(document.querySelector(\"input[aria-label='Search player, tag or clan']\"))",
-    ),
-    true,
-  );
-  await waitFor("!document.body.innerText.includes('Loading players...')");
-  await evaluate("window.scrollTo(0, 0); true");
-  assert.equal(
-    await evaluate("document.documentElement.scrollWidth <= window.innerWidth"),
-    true,
-  );
-  assert.equal(
-    await evaluate(
-      "(() => { const card = document.querySelector('article'); return !card || Boolean(card.querySelector('img[alt*=avatar], [role=img]')); })()",
-    ),
-    true,
-  );
-  for (const width of [320, 360, 375, 390, 412, 430, 480, 768, 1024])
-    await assertNoHorizontalOverflow(width, "guest community");
-  await setViewport(1440, 1000);
-  await screenshot("smoke-en-community-desktop.png");
-
-  if (
-    await evaluate("Boolean(document.querySelector('a[href^=\"/jogador/\"]'))")
-  ) {
-    await evaluate(
-      "document.querySelector('a[href^=\"/jogador/\"]')?.click(); true",
-    );
-    await waitFor("location.pathname.startsWith('/jogador/')");
-    await waitFor("!document.body.innerText.includes('Loading profile...')");
-    assert.equal(
-      await evaluate(
-        "document.body.innerText.toLowerCase().includes('public profile')",
-      ),
-      true,
-      await evaluate("document.body.innerText.slice(0, 500)"),
-    );
-    assert.equal(
-      await evaluate(
-        "Boolean(document.querySelector('section img[alt*=avatar], section [role=img]'))",
-      ),
-      true,
-    );
-    assert.equal(
-      await evaluate(
-        "document.documentElement.scrollWidth <= window.innerWidth",
-      ),
-      true,
-    );
-    for (const width of [320, 360, 375, 390, 412, 430, 480, 768, 1024])
-      await assertNoHorizontalOverflow(width, "guest public profile");
-    await setViewport(1440, 1000);
-    await screenshot("smoke-en-public-profile.png");
-  }
+  await evaluate("location.href = '/comunidade'; true");
+  await waitFor("location.pathname === '/'");
 
   await setViewport(390, 844, true);
   await evaluate(
@@ -499,15 +464,19 @@ try {
   await screenshot("smoke-pt-mobile.png");
 
   const fakeFixture = await installFakeSession();
+  let communityProfileRequests = 0;
+  let communityRestRequests = 0;
   socket.addEventListener("message", (event) => {
     const message = JSON.parse(event.data);
     if (message.method !== "Fetch.requestPaused") return;
     void (async () => {
       const url = message.params.request.url;
+      if (url.includes("/rest/v1/")) communityRestRequests += 1;
       let payload;
       if (url.includes("/auth/v1/user")) payload = fakeFixture.user;
-      else if (url.includes("/rest/v1/profiles")) payload = fakeFixture.profile;
-      else if (url.includes("/rest/v1/user_cards")) payload = [];
+      else if (url.includes("/rest/v1/profiles")) { const ownRequest = /[?&]id=eq\./.test(url); if (!ownRequest) communityProfileRequests += 1; payload = ownRequest ? fakeFixture.profile : [fakeFixture.profile]; }
+      else if (url.includes("/rest/v1/clash_accounts")) { const decoded = decodeURIComponent(url); payload = /[?&]id=eq\./.test(url) ? fakeFixture.accounts.find((account) => decoded.includes(account.id)) ?? fakeFixture.accounts[0] : fakeFixture.accounts; }
+      else if (url.includes("/rest/v1/account_cards")) payload = [];
       else
         return send("Fetch.continueRequest", {
           requestId: message.params.requestId,
@@ -518,6 +487,8 @@ try {
         responseHeaders: [
           { name: "content-type", value: "application/json" },
           { name: "access-control-allow-origin", value: "*" },
+          { name: "access-control-allow-headers", value: "*" },
+          { name: "access-control-allow-methods", value: "GET, POST, PATCH, DELETE, OPTIONS" },
         ],
         body: Buffer.from(JSON.stringify(payload)).toString("base64"),
       });
@@ -535,6 +506,7 @@ try {
   await waitFor(
     "document.querySelector('button[aria-label=\"Abrir menu da conta\"]') && document.querySelector('header [role=status]')?.textContent.trim().length > 10",
   );
+  await waitFor("document.body.innerText.includes('Conta principal') && document.body.innerText.includes('Gerenciar contas')");
   assert.equal(
     await evaluate(
       "document.querySelector('nav a[href=\"/\"]')?.innerText.includes('Coleção') && document.querySelector('nav a[href=\"/comunidade\"]')?.innerText.includes('Comunidade')",
@@ -547,6 +519,11 @@ try {
   );
   for (const width of [320, 360, 375, 390, 412, 430, 480, 768, 1024])
     await assertNoHorizontalOverflow(width, "authenticated collection");
+  assert.equal(
+    await evaluate("(() => { const selector = document.querySelector('[data-testid=active-account-dropdown] > button')?.getBoundingClientRect(); const manage = document.querySelector('a[href=\"/contas\"]')?.getBoundingClientRect(); return Boolean(selector && manage && selector.height === 48 && manage.height === 48 && Math.abs(selector.bottom - manage.bottom) < 1); })()"),
+    true,
+    "active selector and manage button must be 48px and bottom-aligned",
+  );
   await screenshot("smoke-authenticated-1024.png");
   await setViewport(320, 844, true);
   await screenshot("smoke-authenticated-320.png");
@@ -559,6 +536,47 @@ try {
     true,
   );
   await screenshot("smoke-authenticated-account-320.png");
+  await evaluate("location.href = '/contas'; true");
+  await waitFor("location.pathname === '/contas' && document.body.innerText.includes('Minhas contas do Clash')");
+  for (const width of [320, 360, 375, 390, 412, 430, 480, 768, 1024])
+    await assertNoHorizontalOverflow(width, "accounts management");
+  await setViewport(320, 844, true);
+  await evaluate("location.href = '/comunidade'; true");
+  await waitFor("location.pathname === '/comunidade' && document.body.innerText.includes('2 contas do Clash')");
+  assert.equal(await evaluate("document.documentElement.scrollWidth <= window.innerWidth"), true);
+  const communityRequestsBeforeSwitch = communityProfileRequests;
+  await evaluate("document.querySelector('[data-testid=community-account-dropdown] > button')?.click(); true");
+  await waitFor("document.querySelector('[data-testid=community-account-dropdown] > button')?.getAttribute('aria-expanded') === 'true'");
+  assert.equal(await evaluate("document.documentElement.scrollWidth <= window.innerWidth"), true);
+  await evaluate("document.querySelector('[data-testid=community-account-dropdown] button[title^=\"Snd Ichigo\"]')?.click(); true");
+  await waitFor("document.querySelector('[data-testid=community-account-dropdown] > button')?.title.startsWith('Snd Ichigo')");
+  await delay(700);
+  const communityRestRequestsBeforeOtherSwitch = communityRestRequests;
+  await evaluate("document.querySelector('[data-testid^=community-other-account-] > button')?.click(); true");
+  await waitFor("document.querySelector('[data-testid^=community-other-account-] > button')?.getAttribute('aria-expanded') === 'true'");
+  await evaluate("document.querySelector('[data-testid^=community-other-account-] button[title^=\"Snd Ichigo\"]')?.click(); true");
+  await waitFor("document.querySelector('[data-testid^=community-other-account-] > button')?.title.startsWith('Snd Ichigo')");
+  await delay(700);
+  assert.equal(communityProfileRequests, communityRequestsBeforeSwitch, "trocar qualquer uma das contas não deve consultar novamente os perfis da comunidade");
+  assert.equal(communityRestRequests, communityRestRequestsBeforeOtherSwitch, "trocar a conta do card deve usar somente os dados já carregados");
+  assert.equal(
+    await evaluate("(() => { const link = document.querySelector('a[href^=\"/jogador/\"]'); if (!link) return false; const url = new URL(link.href); return url.searchParams.get('myAccount') === '00000000-0000-4000-8000-000000000044' && url.searchParams.get('theirAccount') === '00000000-0000-4000-8000-000000000044'; })()"),
+    true,
+    "Ver e comparar deve transportar as duas contas selecionadas",
+  );
+  assert.equal(
+    await evaluate("document.querySelector('button[aria-label*=\"Snd Ichigo\"]')?.getAttribute('aria-label')?.includes('Copiar tag')"),
+    true,
+    "o botão de copiar deve identificar a conta selecionada",
+  );
+  await screenshot("smoke-authenticated-community-320.png");
+  await evaluate("document.querySelector('a[href^=\"/jogador/\"]')?.click(); true");
+  await waitFor("location.pathname.startsWith('/jogador/') && location.search.includes('myAccount=') && location.search.includes('theirAccount=') && document.body.innerText.includes('Comparar todas as contas')");
+  await waitFor("document.querySelector('[data-testid=public-my-account-dropdown] > button')?.title.startsWith('Snd Ichigo') && document.querySelector('[data-testid=public-their-account-dropdown] > button')?.title.startsWith('Snd Ichigo')");
+  await waitFor("document.querySelectorAll('button[title*=\"#\"]').length >= 2");
+  assert.equal(await evaluate("[...document.querySelectorAll('button[title*=\"#\"]')].every((button) => button.title.includes('·'))"), true);
+  assert.equal(await evaluate("document.documentElement.scrollWidth <= window.innerWidth"), true);
+  await screenshot("smoke-authenticated-public-profile-320.png");
   await send("Fetch.disable");
 
   assert.deepEqual(
@@ -574,7 +592,7 @@ try {
   );
   socket.close();
   console.log(
-    "✓ Smoke browser: pt-BR/en, 9 larguras, visitante/autenticado, navegação, autofill, metadados sociais e comunidade",
+    "✓ Smoke browser: pt-BR/en, 9 larguras, visitante/autenticado, contas, navegação, autofill, metadados, comunidade e perfil público",
   );
 } finally {
   chromeProcess.kill();

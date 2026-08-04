@@ -15,6 +15,7 @@ export default {
   text: {
     title: "🃏 MY COLLECTION{{owner}} — CLASH OF CARDS",
     owner: " — {{name}}",
+    account: "Account: {{name}} · {{tag}}",
     missing: "📌 MISSING CARDS",
     duplicates: "🔁 DUPLICATES AVAILABLE FOR TRADE",
     complete: "Album complete! No duplicates registered.",

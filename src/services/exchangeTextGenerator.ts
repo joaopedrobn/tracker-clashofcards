@@ -4,6 +4,7 @@ import type { TFunction } from "i18next";
 import type { Card } from "../types/card";
 import type { CollectionData } from "../types/collection";
 import { cardName, categoryName } from "../utils/localizedCatalog";
+import type { ClashAccount } from "../types/clashAccount";
 
 function groupedLines(cards: Card[], collection: CollectionData, tCollection: TFunction, formatter: (card: Card, duplicates: number) => string): string[] {
   return categories.flatMap((category) => {
@@ -13,7 +14,7 @@ function groupedLines(cards: Card[], collection: CollectionData, tCollection: TF
   });
 }
 
-export function generateExchangeText(cards: Card[], collection: CollectionData, language = i18n.language): string {
+export function generateExchangeText(cards: Card[], collection: CollectionData, language = i18n.language, account?: ClashAccount | null): string {
   const t = i18n.getFixedT(language, "exchange");
   const tCards = i18n.getFixedT(language, "cards");
   const tCollection = i18n.getFixedT(language, "collection");
@@ -22,6 +23,7 @@ export function generateExchangeText(cards: Card[], collection: CollectionData, 
   const collected = cards.length - missing.length;
   const owner = collection.playerName.trim() ? t("text.owner", { name: collection.playerName.trim().toUpperCase() }) : "";
   const lines = [t("text.title", { owner }), ""];
+  if (account) lines.push(t("text.account", { name: account.clashNickname, tag: account.clashPlayerTag }), "");
   if (missing.length) lines.push(t("text.missing"), "", ...groupedLines(missing, collection, tCollection, (card) => `- ${cardName(card, tCards)}`));
   if (duplicates.length) lines.push(t("text.duplicates"), "", ...groupedLines(duplicates, collection, tCollection, (card, count) => `- ${cardName(card, tCards)} x${count}`));
   if (!missing.length && !duplicates.length) lines.push(t("text.complete"), "");
